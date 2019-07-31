@@ -1,14 +1,22 @@
 package org.zero.ipcamera;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import org.zero.ipcamera.media.widget.IpCameraView;
 import org.zero.ipcamera.utils.IpcUtils;
 import org.zero.ipcamera.utils.XmlParserUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -17,16 +25,17 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class MainActivity extends AppCompatActivity {
-    private List<String> mLstIpc = new ArrayList<>();
-    private List<IpCameraView> mLstCamera = new ArrayList<>();
+    private static final String TAG = "MainActivity";
+    private IpCameraView ipCameraView;
 
     static {
         // init player
@@ -42,14 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        IpCameraView ipCameraView1 = findViewById(R.id.ipc_view1);
-        IpCameraView ipCameraView2 = findViewById(R.id.ipc_view2);
-        IpCameraView ipCameraView3 = findViewById(R.id.ipc_view3);
-        IpCameraView ipCameraView4 = findViewById(R.id.ipc_view4);
-        mLstCamera.add(ipCameraView1);
-        mLstCamera.add(ipCameraView2);
-        mLstCamera.add(ipCameraView3);
-        mLstCamera.add(ipCameraView4);
+        ipCameraView = findViewById(R.id.ipc_view);
         searchIpc();
     }
 
@@ -78,15 +80,9 @@ public class MainActivity extends AppCompatActivity {
                         socket.receive(receivePacket);
                         if (receivePacket.getLength() > 0) {
                             String serviceUrl = XmlParserUtils.getIpcUrl(receivePacket.getData(), "XAddrs");
-                            if (!mLstIpc.contains(serviceUrl)) {
-                                mLstIpc.add(serviceUrl);
-                                IpCameraView cameraView = mLstCamera.get(mLstIpc.size() - 1);
-                                cameraView.setServiceUrl(serviceUrl);
-                                cameraView.play();
-                            }
-                            if (mLstIpc.size() >= 4) {
-                                break;
-                            }
+                            ipCameraView.setServiceUrl(serviceUrl);
+                            ipCameraView.play();
+                            break;
                         }
                     }
                 } catch (SocketException e) {
@@ -118,12 +114,45 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    public void startRecord(View view) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        } else {
+            record();
+        }
+    }
+
+    private void record() {
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecordVideos");
+        if (!file.exists() && !file.mkdirs()) {
+            Log.e(TAG, "录像保存路径错误");
+            return;
+        }
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
+        String path = file.getAbsolutePath() + "/" + date + ".mp4";
+        ipCameraView.startRecord(path);
+    }
+
+    public void stopRecord(View view) {
+        ipCameraView.stopRecord();
+    }
+
+    public void screenShot(View view) {
+        ipCameraView.screenShot();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            record();
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
-        for (IpCameraView ipCameraView : mLstCamera) {
-            ipCameraView.stop();
-        }
+        ipCameraView.stop();
         IjkMediaPlayer.native_profileEnd();
     }
 }

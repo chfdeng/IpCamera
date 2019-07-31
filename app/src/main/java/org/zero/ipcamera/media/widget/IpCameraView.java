@@ -2,7 +2,6 @@ package org.zero.ipcamera.media.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,9 +9,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
@@ -22,18 +19,14 @@ import org.zero.ipcamera.model.Profile;
 import org.zero.ipcamera.utils.IpcUtils;
 import org.zero.ipcamera.utils.XmlParserUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by cfd on 2019/7/30.
@@ -83,32 +76,6 @@ public class IpCameraView extends FrameLayout {
         layoutParams.gravity = Gravity.CENTER_VERTICAL;
         addView(tabLayout, layoutParams);
         mIjkVideoView.setHudView(tabLayout);
-
-        Button button = new Button(context);
-        button.setText("开始录制");
-        LayoutParams layoutParams2 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams2.gravity = Gravity.BOTTOM;
-        layoutParams2.leftMargin = 150;
-        addView(button, layoutParams2);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startRecord();
-            }
-        });
-
-        Button button2 = new Button(context);
-        button2.setText("停止录制");
-        LayoutParams layoutParams3 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams3.gravity = Gravity.BOTTOM | Gravity.END;
-        layoutParams3.rightMargin = 150;
-        addView(button2, layoutParams3);
-        button2.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopRecord();
-            }
-        });
     }
 
     public void setServiceUrl(String url) {
@@ -270,14 +237,8 @@ public class IpCameraView extends FrameLayout {
         return urlConnection;
     }
 
-    public void startRecord() {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecordVideos");
-        if (!file.exists() && !file.mkdirs()) {
-            Log.e(TAG, "录像保存路径错误");
-            return;
-        }
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
-        mIjkVideoView.startRecord(file.getAbsolutePath() + "/" + mManufacturer + " " + date + ".mp4");
+    public void startRecord(String path) {
+        mIjkVideoView.startRecord(path);
     }
 
     public void stopRecord() {
