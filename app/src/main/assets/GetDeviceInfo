@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+    %s
+    <s:Body xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <GetDeviceInformation xmlns="http://www.onvif.org/ver10/device/wsdl" />
+    </s:Body>
+</s:Envelope>

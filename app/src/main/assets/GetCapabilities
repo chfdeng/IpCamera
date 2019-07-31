@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+    <s:Body xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <GetCapabilities xmlns="http://www.onvif.org/ver10/device/wsdl">
+            <Category>Media</Category>
+        </GetCapabilities>
+    </s:Body>
+</s:Envelope>

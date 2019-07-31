@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_key_enable_background_play" translatable="false">pref.enable_background_play</string>
+    <string name="pref_key_player" translatable="false">pref.player</string>
+    <string name="pref_key_using_media_codec" translatable="false">pref.using_media_codec</string>
+    <string name="pref_key_using_media_codec_auto_rotate" translatable="false">pref.using_media_codec_auto_rotate</string>
+    <string name="pref_key_media_codec_handle_resolution_change" translatable="false">pref.media_codec_handle_resolution_change</string>
+    <string name="pref_key_using_opensl_es" translatable="false">pref.using_opensl_es</string>
+    <string name="pref_key_pixel_format" translatable="false">pref.pixel_format</string>
+    <string name="pref_key_enable_no_view" translatable="false">pref.enable_no_view</string>
+    <string name="pref_key_enable_surface_view" translatable="false">pref.enable_surface_view</string>
+    <string name="pref_key_enable_texture_view" translatable="false">pref.enable_texture_view</string>
+    <string name="pref_key_enable_detached_surface_texture" translatable="false">pref.enable_detached_surface_texture</string>
+    <string name="pref_key_using_mediadatasource" translatable="false">pref.using_mediadatasource</string>
+    <string name="pref_key_last_directory" translatable="false"></string>
+</resources>
