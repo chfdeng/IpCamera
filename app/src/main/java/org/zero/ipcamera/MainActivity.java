@@ -2,6 +2,7 @@ package org.zero.ipcamera;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void screenShot(View view) {
-        ipCameraView.screenShot();
+        Bitmap bitmap = ipCameraView.screenShot();
     }
 
     @Override
